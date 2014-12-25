@@ -50,6 +50,32 @@ def encode1(list):
 		i+=1
 	return list
 
+def longestSubstring(string):
+	if not string:
+		print("\t Sorry, string was null entering longestSubstring")
+	longestSubstringLength = 0
+	currentSubstringLength = 1
+	currentChar = "@"
+	currentSubstring = ""
+	longestSubstring = ""
+	
+	#for x in xrange(0, len(string))xrange not better than 'range' here
+	for x in string:
+		if x == currentChar:
+			currentSubstringLength +=1
+			currentSubstring += x
+		else:
+			if longestSubstringLength < currentSubstringLength:
+				longestSubstringLength = currentSubsstringLength
+				longestSubstring = currentSubstring
+			currentChar = x
+			currentSubstringLength = 1
+			currentSubstring = x
+	return longestSubstring
+
+	
+	
+'''	
 x = ['a','a','b','a','c','a','c','c','c','c']
 return_list = packDupsIntoSublists(x)
 print(return_list)
@@ -65,12 +91,13 @@ return_list = packDupsIntoSublists(x)
 print(return_list)
 print(encode1(return_list),"\n")
 
-#x = [Node(0), Node(1), Node(2), Node(3), Node(4)]
-#c = 0
-#while c < len(x) - 1:
-#	x[c].next = x[c+1]
-#	print(x[c].value)
-#	if(x[c].next != -1):
-#		print("next is ",x[c].next.value)
-#	c += 1
-#print(x[c].value, x[c].next)
+x = [Node(0), Node(1), Node(2), Node(3), Node(4)]
+c = 0
+while c < len(x) - 1:
+	x[c].next = x[c+1]
+	print(x[c].value)
+	if(x[c].next != -1):
+		print("next is ",x[c].next.value)
+	c += 1
+print(x[c].value, x[c].next)
+'''
