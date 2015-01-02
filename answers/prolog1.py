@@ -73,7 +73,7 @@ def longestSubstring(string):
 			currentSubstring = x
 	return longestSubstring
 
-	
+#TODO test
 	
 '''	
 x = ['a','a','b','a','c','a','c','c','c','c']
