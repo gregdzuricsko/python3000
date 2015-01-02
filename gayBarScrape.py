@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import datetime
 import unicodedata
-
+import re
 
 BASE_URL = "http://www.chicagoreader.com"
 EAGLE_BOLT_URL = "http://eagleboltbar.com/daily_specials.html"
@@ -80,14 +80,28 @@ def get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS):
 		if day.text is '':
 			continue;
 		eventDescription = day.find_next("blockquote")
-		print(eventDescription.text)
-		print(day.text)
-		#printCodedThing(eventDescription)
-		#EAGLE_SPECIAL_MAPPINGS[] = eventDescription
+		EAGLE_SPECIAL_MAPPINGS[day.text] = eventDescription.text
 
+def get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS):
+	soup = get_soup(EAGLE_BOLT_URL)
+	r = re.compile('[a-zA-Z]+day')
+	#assert r.match('sss')
+	assert r.match('sunday')
+	assert r.match('SUNday')
+	allDays = soup.findAll(name=re.compile('[a-zA-Z]+day'))
+	print(repr(allDays))
+	for day in allDays:
+		print(repr(day))
+		#print(day.text)
 		
+		
+#1. get eagle events
 EAGLE_SPECIAL_MAPPINGS = {}	
 get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS)
+#2. get eagle daily_specials
+EAGLE_DAILY_MAPPINGS = {}	
+get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS)
+
 #SALOON_MAPPINGS = {}
 #get_saloon_daily_special(SALOON_MAPPINGS)
 #convertToWhateverCode(SALOON_MAPPINGS)
