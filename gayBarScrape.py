@@ -1,4 +1,5 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
+import html5lib
 import datetime
 import unicodedata
 import re
@@ -8,11 +9,12 @@ EAGLE_BOLT_URL = "http://eagleboltbar.com/daily_specials.html"
 EAGLE_BOLT_SPECIAL_URL = "http://eagleboltbar.com/special_events.html"
 SALOON_URL = "http://saloonmn.com/calendar-of-events"
 DAY_MAPPING = {0: 'Monday', 1:'Tuesday', 2:'Wednesday', 3:'Thursday', 4:'Friday', 5:'Saturday', 6:'Sunday'}
+DEBUG_MODE = True
 
 #taken from scrapeTutorial exercise, returns beautifulsoup
 def get_soup(url):
 	html = request.urlopen(url).read()
-	soup = BeautifulSoup(html, "lxml")
+	soup = BeautifulSoup(html, "html5")
 	return soup
 	
 #want saloon from day to day
@@ -84,24 +86,45 @@ def get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS):
 
 def get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS):
 	soup = get_soup(EAGLE_BOLT_URL)
+	comments = soup.findAll(text=lambda text:isinstance(text, Comment))
+	[comment.extract() for comment in comments]
 	r = re.compile('[a-zA-Z]+day')
 	#assert r.match('sss')
 	assert r.match('sunday')
 	assert r.match('SUNday')
-	allDays = soup.findAll(name=re.compile('[a-zA-Z]+day'))
-	print(repr(allDays))
+	allDays = soup.findAll(is_a_and_name_ends_with_day)
 	for day in allDays:
-		print(repr(day))
-		#print(day.text)
+		#print("debugging", repr(day.parent.parent.parent))
+		greatGrandparent = day.parent.parent.parent
+		activities = greatGrandparent.next_sibling.next_sibling
+		if activities is None:
+			activities = greatGrandparent.parent.next_sibling.next_sibling
+			#print("switched")
+		#print("sibling", activities.text)
+		
+		activity = ""
+		for str in activities.stripped_strings:
+			activity = activity + str + "\n"
+		#print(activity)
+		EAGLE_DAILY_MAPPINGS[day['name']] = activity
+	
+	print("leaving specials")
+	
+def is_a_and_name_ends_with_day(tag):
+	return tag.has_attr("name") and re.compile('[a-zA-Z]+day').match(tag['name'])
 		
 		
 #1. get eagle events
 EAGLE_SPECIAL_MAPPINGS = {}	
-get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS)
+#get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS)
+if DEBUG_MODE:
+	print(EAGLE_SPECIAL_MAPPINGS)
+
 #2. get eagle daily_specials
 EAGLE_DAILY_MAPPINGS = {}	
 get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS)
-
+print(EAGLE_DAILY_MAPPINGS)
+#3 Saloon stuff
 #SALOON_MAPPINGS = {}
 #get_saloon_daily_special(SALOON_MAPPINGS)
 #convertToWhateverCode(SALOON_MAPPINGS)
