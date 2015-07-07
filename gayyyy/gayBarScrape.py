@@ -3,8 +3,8 @@ import html5lib
 import datetime
 import unicodedata
 import re
+from Event import EventO
 
-BASE_URL = "http://www.chicagoreader.com"
 EAGLE_BOLT_URL = "http://eagleboltbar.com/daily_specials.html"
 EAGLE_BOLT_SPECIAL_URL = "http://eagleboltbar.com/special_events.html"
 SALOON_URL = "http://saloonmn.com/calendar-of-events"
@@ -16,26 +16,46 @@ def get_soup(url):
 	html = request.urlopen(url).read()
 	soup = BeautifulSoup(html, "html5")
 	return soup
-	
-#want saloon from day to day
-def get_saloon_daily_special(SALOON_MAPPINGS, currentDay=None):
+
+#want saloon from day to day, eventually as json
+def get_saloon_daily_special(currentDay=None):
 	soup = get_soup(SALOON_URL)
 	allEvents = soup.findAll("div","cover-container") #types in python!
+	eventOList = []
+
 	for cover in allEvents:
 		eventTitle = cover.find("h4","day")
 		eventDescription = cover.find("div","event-description")
-		eventDayNumber = get_day_number(printCodedThing(eventTitle))
-		SALOON_MAPPINGS[eventDayNumber] = eventDescription
-		printCodedThing(eventDescription)
+		eventDay = print_coded_thing(eventTitle).decode('utf-8')
+		eventDayNumber = get_day_number(eventDay)
+		eventDescription = print_coded_thing(eventDescription).decode('utf-8')
 
-def printCodedThing(coverMaybe):
+		indexAfterAge = eventDescription.find("\n",eventDescription.find("\n",eventDescription.find("\n")+1)+1)
+		eventAge = eventDescription[(indexAfterAge-3):indexAfterAge]
+
+		indexAfterCover = eventDescription.find("\n",indexAfterAge+1)
+		eventCover = eventDescription[indexAfterAge:indexAfterCover].strip();
+		print("eventAge",eventAge)
+		#print("index after cover",indexAfterCover,"indexAfterAge",indexAfterAge)
+		print("eventCover",eventCover)
+		eventHours = eventDescription[indexAfterCover:].strip();
+
+		#should have done this earlier and better
+		eventDescription = eventDescription[:eventDescription.find("\n")]
+		print("eventHours",eventHours)
+		print("eventDescription",eventDescription)
+		eventOList.append(EventO("n/a", eventDescription, eventDay, eventHours, eventCover, eventAge))
+
+	#for eventO in eventOList:
+	#	print(eventO.printStuff(),"\n");
+def print_coded_thing(coverMaybe):
 	text = ''.join(coverMaybe.findAll(text=True))
 	data = text.strip()
 	nkfd_form = unicodedata.normalize('NFKD', data)
 	only_ascii = nkfd_form.encode('ASCII', 'ignore')
 	print("printing uncoded",only_ascii)
 	return only_ascii
-'''	
+'''
 def printEncodedText(text):
 	data = text.strip()
 	nkfd_form = unicodedata.normalize('NFKD', data)
@@ -59,17 +79,17 @@ def get_day_number(dayAsString):
 	elif 'sunday' in str(dayAsString).lower():
 		return 6
 
-def getCurrentDay(currentDay=None):
+def get_current_day(currentDay=None):
 	if currentDay == None:
 		dayNumber = datetime.datetime.today().weekday() #from datetime, get current day as int from monday = 0
 		print(dayNumber)
 		currentDay = DAY_MAPPING[dayNumber]
-		
-def convertToWhateverCode(SALOON_MAPPINGS):
-	for key in SALOON_MAPPINGS:#== for key in dict.keys
-		text = SALOON_MAPPINGS[key]
-		SALOON_MAPPINGS[key] = printCodedThing(text).decode('utf-8')
-#python 2 or python 3 import urllib	
+
+#def convert_to_whatever_code(SALOON_MAPPINGS):
+#	for key in SALOON_MAPPINGS:#== for key in dict.keys
+#		text = SALOON_MAPPINGS[key]
+#		SALOON_MAPPINGS[key] = print_coded_thing(text).decode('utf-8')
+#python 2 or python 3 import urllib
 try:
 	from urllib import request
 except ImportError:
@@ -82,6 +102,7 @@ def get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS):
 		if day.text is '':
 			continue;
 		eventDescription = day.find_next("blockquote")
+		day.text
 		EAGLE_SPECIAL_MAPPINGS[day.text] = eventDescription.text
 
 def get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS):
@@ -94,42 +115,45 @@ def get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS):
 	assert r.match('SUNday')
 	allDays = soup.findAll(is_a_and_name_ends_with_day)
 	for day in allDays:
-		#print("debugging", repr(day.parent.parent.parent))
 		greatGrandparent = day.parent.parent.parent
 		activities = greatGrandparent.next_sibling.next_sibling
 		if activities is None:
 			activities = greatGrandparent.parent.next_sibling.next_sibling
-			#print("switched")
-		#print("sibling", activities.text)
-		
 		activity = ""
 		for str in activities.stripped_strings:
 			activity = activity + str + "\n"
 		#print(activity)
 		EAGLE_DAILY_MAPPINGS[day['name']] = activity
-	
+
 	print("leaving specials")
-	
+
 def is_a_and_name_ends_with_day(tag):
 	return tag.has_attr("name") and re.compile('[a-zA-Z]+day').match(tag['name'])
-		
-		
-#1. get eagle events
-EAGLE_SPECIAL_MAPPINGS = {}	
+
+def consolidate_lists():
+	#I don't know if this is necessary yet. unwritten
+	return ""
+
+def log_it(stuffToBeWritten):
+	log = open("log.txt", "a")
+	log.write(stuffToBeWritten)
+	log.close()
+
+
+
+
+
+##1. get eagle events
+#EAGLE_SPECIAL_MAPPINGS = {}
 #get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS)
-if DEBUG_MODE:
-	print(EAGLE_SPECIAL_MAPPINGS)
+#if DEBUG_MODE:
+#print(EAGLE_SPECIAL_MAPPINGS)
 
 #2. get eagle daily_specials
-EAGLE_DAILY_MAPPINGS = {}	
+EAGLE_DAILY_MAPPINGS = {}
 get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS)
-print(EAGLE_DAILY_MAPPINGS)
+#print(EAGLE_DAILY_MAPPINGS)
 #3 Saloon stuff
-#SALOON_MAPPINGS = {}
-#get_saloon_daily_special(SALOON_MAPPINGS)
-#convertToWhateverCode(SALOON_MAPPINGS)
+SALOON_MAPPINGS = {}
+get_saloon_daily_special()
 #print(SALOON_MAPPINGS)
-
-
-
-
