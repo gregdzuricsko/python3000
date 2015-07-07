@@ -3,6 +3,8 @@ import html5lib
 import datetime
 import unicodedata
 import re
+import json
+
 from Event import EventO
 
 EAGLE_BOLT_URL = "http://eagleboltbar.com/daily_specials.html"
@@ -18,7 +20,7 @@ def get_soup(url):
 	return soup
 
 #want saloon from day to day, eventually as json
-def get_saloon_daily_special(currentDay=None):
+def get_saloon_daily_special():
 	soup = get_soup(SALOON_URL)
 	allEvents = soup.findAll("div","cover-container") #types in python!
 	eventOList = []
@@ -34,11 +36,11 @@ def get_saloon_daily_special(currentDay=None):
 		eventAge = eventDescription[(indexAfterAge-3):indexAfterAge]
 
 		indexAfterCover = eventDescription.find("\n",indexAfterAge+1)
-		eventCover = eventDescription[indexAfterAge:indexAfterCover].strip();
+		eventCover = eventDescription[indexAfterAge:indexAfterCover].strip()
 		print("eventAge",eventAge)
 		#print("index after cover",indexAfterCover,"indexAfterAge",indexAfterAge)
 		print("eventCover",eventCover)
-		eventHours = eventDescription[indexAfterCover:].strip();
+		eventHours = eventDescription[indexAfterCover:].strip()
 
 		#should have done this earlier and better
 		eventDescription = eventDescription[:eventDescription.find("\n")]
@@ -46,8 +48,10 @@ def get_saloon_daily_special(currentDay=None):
 		print("eventDescription",eventDescription)
 		eventOList.append(EventO("n/a", eventDescription, eventDay, eventHours, eventCover, eventAge))
 
+	return eventOList
 	#for eventO in eventOList:
 	#	print(eventO.printStuff(),"\n");
+
 def print_coded_thing(coverMaybe):
 	text = ''.join(coverMaybe.findAll(text=True))
 	data = text.strip()
@@ -64,19 +68,20 @@ def printEncodedText(text):
 	return only_ascii
 '''
 def get_day_number(dayAsString):
-	if 'monday' in str(dayAsString).lower():
+	lowerCaseDayAsString = str(dayAsString).lower()
+	if 'monday' in lowerCaseDayAsString:
 		return 0
-	elif 'tuesday' in str(dayAsString).lower():
+	elif 'tuesday' in lowerCaseDayAsString:
 		return 1
-	elif 'wednesday' in str(dayAsString).lower():
+	elif 'wednesday' in lowerCaseDayAsString:
 		return 2
-	elif 'thursday' in str(dayAsString).lower():
+	elif 'thursday' in lowerCaseDayAsString:
 		return 3
-	elif 'friday'in str(dayAsString).lower():
+	elif 'friday'in lowerCaseDayAsString:
 		return 4
-	elif 'saturday' in str(dayAsString).lower():
+	elif 'saturday' in lowerCaseDayAsString:
 		return 5
-	elif 'sunday' in str(dayAsString).lower():
+	elif 'sunday' in lowerCaseDayAsString:
 		return 6
 
 def get_current_day(currentDay=None):
@@ -100,12 +105,12 @@ def get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS):
 	allDays = soup.findAll("span","style34") #types in python!
 	for day in allDays:
 		if day.text is '':
-			continue;
+			continue
 		eventDescription = day.find_next("blockquote")
-		day.text
 		EAGLE_SPECIAL_MAPPINGS[day.text] = eventDescription.text
 
-def get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS):
+def get_eagle_daily_specials():
+	dailyMappings = {}
 	soup = get_soup(EAGLE_BOLT_URL)
 	comments = soup.findAll(text=lambda text:isinstance(text, Comment))
 	[comment.extract() for comment in comments]
@@ -120,12 +125,13 @@ def get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS):
 		if activities is None:
 			activities = greatGrandparent.parent.next_sibling.next_sibling
 		activity = ""
-		for str in activities.stripped_strings:
-			activity = activity + str + "\n"
+		for string in activities.stripped_strings:
+			activity = activity + string + "\n"
 		#print(activity)
-		EAGLE_DAILY_MAPPINGS[day['name']] = activity
+		dailyMappings[day['name']] = activity
 
 	print("leaving specials")
+	return dailyMappings
 
 def is_a_and_name_ends_with_day(tag):
 	return tag.has_attr("name") and re.compile('[a-zA-Z]+day').match(tag['name'])
@@ -135,11 +141,9 @@ def consolidate_lists():
 	return ""
 
 def log_it(stuffToBeWritten):
-	log = open("log.txt", "a")
-	log.write(stuffToBeWritten)
-	log.close()
-
-
+	with open("log.txt", "a") as log:
+		log.write(stuffToBeWritten)
+		log.close()
 
 
 
@@ -150,10 +154,11 @@ def log_it(stuffToBeWritten):
 #print(EAGLE_SPECIAL_MAPPINGS)
 
 #2. get eagle daily_specials
-EAGLE_DAILY_MAPPINGS = {}
-get_eagle_daily_specials(EAGLE_DAILY_MAPPINGS)
-#print(EAGLE_DAILY_MAPPINGS)
+eagleDailyMappings = get_eagle_daily_specials()
+
+#print(eagleDailyMappings)
 #3 Saloon stuff
 SALOON_MAPPINGS = {}
-get_saloon_daily_special()
+saloon_list = get_saloon_daily_special()#saloonList is now an array
+saloon_json = json.dumps(saloon_list,ensure_ascii=False)
 #print(SALOON_MAPPINGS)
