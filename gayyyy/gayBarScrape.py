@@ -1,22 +1,23 @@
-from bs4 import BeautifulSoup, Comment
-import html5lib
+from bs4 import BeautifulSoup
+from urllib import request
 import datetime
 import unicodedata
 import re
 import json
 
-from Event import EventO
+
+
+from EventO import EventO
 
 EAGLE_BOLT_URL = "http://eagleboltbar.com/daily_specials.html"
 EAGLE_BOLT_SPECIAL_URL = "http://eagleboltbar.com/special_events.html"
 SALOON_URL = "http://saloonmn.com/calendar-of-events"
 DAY_MAPPING = {0: 'Monday', 1:'Tuesday', 2:'Wednesday', 3:'Thursday', 4:'Friday', 5:'Saturday', 6:'Sunday'}
-DEBUG_MODE = True
 
 #taken from scrapeTutorial exercise, returns beautifulsoup
 def get_soup(url):
 	html = request.urlopen(url).read()
-	soup = BeautifulSoup(html, "html5")
+	soup = BeautifulSoup(html, "html5lib")
 	return soup
 
 #want saloon from day to day, eventually as json
@@ -29,7 +30,7 @@ def get_saloon_daily_special():
 		eventTitle = cover.find("h4","day")
 		eventDescription = cover.find("div","event-description")
 		eventDay = print_coded_thing(eventTitle).decode('utf-8')
-		eventDayNumber = get_day_number(eventDay)
+		#eventDayNumber = get_day_number(eventDay)
 		eventDescription = print_coded_thing(eventDescription).decode('utf-8')
 
 		indexAfterAge = eventDescription.find("\n",eventDescription.find("\n",eventDescription.find("\n")+1)+1)
@@ -37,15 +38,8 @@ def get_saloon_daily_special():
 
 		indexAfterCover = eventDescription.find("\n",indexAfterAge+1)
 		eventCover = eventDescription[indexAfterAge:indexAfterCover].strip()
-		print("eventAge",eventAge)
-		#print("index after cover",indexAfterCover,"indexAfterAge",indexAfterAge)
-		print("eventCover",eventCover)
 		eventHours = eventDescription[indexAfterCover:].strip()
-
-		#should have done this earlier and better
 		eventDescription = eventDescription[:eventDescription.find("\n")]
-		print("eventHours",eventHours)
-		print("eventDescription",eventDescription)
 		eventOList.append(EventO("n/a", eventDescription, eventDay, eventHours, eventCover, eventAge))
 
 	return eventOList
@@ -57,16 +51,16 @@ def print_coded_thing(coverMaybe):
 	data = text.strip()
 	nkfd_form = unicodedata.normalize('NFKD', data)
 	only_ascii = nkfd_form.encode('ASCII', 'ignore')
-	print("printing uncoded",only_ascii)
+#	print("printing uncoded",only_ascii)
 	return only_ascii
-'''
-def printEncodedText(text):
-	data = text.strip()
-	nkfd_form = unicodedata.normalize('NFKD', data)
-	only_ascii = nkfd_form.encode('ASCII', 'ignore')
-	print("printing uncoded",only_ascii)
-	return only_ascii
-'''
+
+# def print_Encoded_Text(text):
+# 	data = text.strip()
+# 	nkfd_form = unicodedata.normalize('NFKD', data)
+# 	only_ascii = nkfd_form.encode('ASCII', 'ignore')
+# 	print("printing uncoded",only_ascii)
+# 	return only_ascii
+
 def get_day_number(dayAsString):
 	lowerCaseDayAsString = str(dayAsString).lower()
 	if 'monday' in lowerCaseDayAsString:
@@ -94,28 +88,23 @@ def get_current_day(currentDay=None):
 #	for key in SALOON_MAPPINGS:#== for key in dict.keys
 #		text = SALOON_MAPPINGS[key]
 #		SALOON_MAPPINGS[key] = print_coded_thing(text).decode('utf-8')
-#python 2 or python 3 import urllib
-try:
-	from urllib import request
-except ImportError:
-	import urllib2
 
-def get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS):
+
+def get_eagle_special_events():
+	eagleSpecialMappings = {}
 	soup = get_soup(EAGLE_BOLT_SPECIAL_URL)
 	allDays = soup.findAll("span","style34") #types in python!
 	for day in allDays:
 		if day.text is '':
 			continue
 		eventDescription = day.find_next("blockquote")
-		EAGLE_SPECIAL_MAPPINGS[day.text] = eventDescription.text
+		eagleSpecialMappings[day.text] = re.sub(r'\s+',' ',print_coded_thing(eventDescription).decode('utf-8'))
+	return eagleSpecialMappings
 
 def get_eagle_daily_specials():
 	dailyMappings = {}
 	soup = get_soup(EAGLE_BOLT_URL)
-	comments = soup.findAll(text=lambda text:isinstance(text, Comment))
-	[comment.extract() for comment in comments]
 	r = re.compile('[a-zA-Z]+day')
-	#assert r.match('sss')
 	assert r.match('sunday')
 	assert r.match('SUNday')
 	allDays = soup.findAll(is_a_and_name_ends_with_day)
@@ -131,34 +120,34 @@ def get_eagle_daily_specials():
 		dailyMappings[day['name']] = activity
 
 	print("leaving specials")
+	#print(dailyMappings)
 	return dailyMappings
 
 def is_a_and_name_ends_with_day(tag):
 	return tag.has_attr("name") and re.compile('[a-zA-Z]+day').match(tag['name'])
 
-def consolidate_lists():
-	#I don't know if this is necessary yet. unwritten
-	return ""
 
 def log_it(stuffToBeWritten):
 	with open("log.txt", "a") as log:
 		log.write(stuffToBeWritten)
 		log.close()
 
-
+def encode_eventO(obj):
+	if isinstance(obj,EventO):
+		return obj.__dict__
+	return obj
 
 ##1. get eagle events
-#EAGLE_SPECIAL_MAPPINGS = {}
-#get_eagle_special_events(EAGLE_SPECIAL_MAPPINGS)
+eagle_special_mappings = get_eagle_special_events()
 #if DEBUG_MODE:
-#print(EAGLE_SPECIAL_MAPPINGS)
+print(eagle_special_mappings)
 
 #2. get eagle daily_specials
 eagleDailyMappings = get_eagle_daily_specials()
+print(eagleDailyMappings)
 
-#print(eagleDailyMappings)
 #3 Saloon stuff
 SALOON_MAPPINGS = {}
-saloon_list = get_saloon_daily_special()#saloonList is now an array
-saloon_json = json.dumps(saloon_list,ensure_ascii=False)
-#print(SALOON_MAPPINGS)
+saloon_list = get_saloon_daily_special()#saloonList is now a list of events
+saloon_json_string = json.dumps(saloon_list, default=encode_eventO)#wow, that was way easier than i thought it would be
+#print(saloon_json_string)
