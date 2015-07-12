@@ -127,8 +127,14 @@ def is_a_and_name_ends_with_day(tag):
 	return tag.has_attr("name") and re.compile('[a-zA-Z]+day').match(tag['name'])
 
 
+#empties a a file
+def delete_content(pfile):
+	pfile.seek(0)
+	pfile.truncate()
+
 def log_it(stuffToBeWritten):
-	with open("log.txt", "a") as log:
+	with open("happyHour.txt", "a") as log:
+		delete_content(log)
 		log.write(stuffToBeWritten)
 		log.close()
 
@@ -138,16 +144,18 @@ def encode_eventO(obj):
 	return obj
 
 ##1. get eagle events
-eagle_special_mappings = get_eagle_special_events()
+#eagle_special_mappings = get_eagle_special_events()
 #if DEBUG_MODE:
-print(eagle_special_mappings)
+#print(eagle_special_mappings)
 
 #2. get eagle daily_specials
-eagleDailyMappings = get_eagle_daily_specials()
-print(eagleDailyMappings)
+#eagleDailyMappings = get_eagle_daily_specials()
+#print(eagleDailyMappings)
 
 #3 Saloon stuff
 SALOON_MAPPINGS = {}
 saloon_list = get_saloon_daily_special()#saloonList is now a list of events
 saloon_json_string = json.dumps(saloon_list, default=encode_eventO)#wow, that was way easier than i thought it would be
-#print(saloon_json_string)
+print(saloon_json_string)
+
+log_it(saloon_json_string)
