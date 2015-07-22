@@ -1,1 +1,0 @@
-/*App starting point. Use require syntax to bring in dependencies*/

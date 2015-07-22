@@ -1,12 +1,17 @@
 <html>
-    
+
     <head></head>
-    
+
     <body>
+        <script src='jspm_packages/es6-module-loader.js'></script><!-- optional: to load ES6-style modules -->
+        <script src='jspm_packages/system.js'></script><!-- required -->
+        <script src="config.js"></script><!-- required -->
+
+        <script>
+            System.import("js/basic");
+        </script>
+
         <h1>Hello World!</h1>
-        <!-- build:js -->
-        <script src="src/build.js"></script>
-        <!-- endbuild --> 
     </body>
 
 </html>
