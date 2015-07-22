@@ -133,7 +133,7 @@ def delete_content(pfile):
 	pfile.truncate()
 
 def log_it(stuffToBeWritten):
-	with open("happyHour.txt", "a") as log:
+	with open("front/json/happyHour.txt", "a") as log:
 		delete_content(log)
 		log.write(stuffToBeWritten)
 		log.close()
