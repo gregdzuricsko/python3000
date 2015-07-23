@@ -2,7 +2,7 @@
 
     <head></head>
 
-    <body>
+    <body ng-app="myApp">
         <script src='/jspm_packages/es6-module-loader.js'></script><!-- optional: to load ES6-style modules -->
         <script src='/jspm_packages/system.js'></script><!-- required -->
         <script src="/config.js"></script><!-- required -->
@@ -12,6 +12,16 @@
         </script>
 
         <h1>Hello World!</h1>
+
+        <div ng-controller='userCtrl as y'>
+        <h2>List of github users</h2>
+        <ul ng-repeat='usr in y.users'>
+            <li>
+                {{usr.id}}. {{usr.login}} <img src='{{usr.avatar_url}}' height='50px'/>
+            </li>
+        </ul>
+
+        </div>
     </body>
 
 </html>

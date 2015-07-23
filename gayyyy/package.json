@@ -22,6 +22,7 @@
   "jspm": {
     "directories": {},
     "dependencies": {
+      "angular": "github:angular/bower-angular@^1.4.3",
       "jquery": "github:components/jquery@^2.1.4"
     },
     "devDependencies": {
