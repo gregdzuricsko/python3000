@@ -1,6 +1,6 @@
 // Include gulp
 var gulp = require('gulp');
-var connect = require('gulp-connect')
+var connect = require('gulp-connect');
 
 // Include Our Plugins
 var jshint = require('gulp-jshint');
@@ -37,4 +37,4 @@ gulp.task('connect', function() {
     });
 });
 
-gulp.task('default', 'watch');
+gulp.task('default', ['watch', 'connect']);

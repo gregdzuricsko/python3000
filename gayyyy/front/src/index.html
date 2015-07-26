@@ -1,27 +1,32 @@
 <html>
 
-    <head></head>
+<head></head>
 
-    <body ng-app="myApp">
-        <script src='/jspm_packages/es6-module-loader.js'></script><!-- optional: to load ES6-style modules -->
-        <script src='/jspm_packages/system.js'></script><!-- required -->
-        <script src="/config.js"></script><!-- required -->
+<body ng-app="gay">
+  <script src='/jspm_packages/es6-module-loader.js'></script>
+  <!-- optional: to load ES6-style modules -->
+  <script src='/jspm_packages/system.js'></script>
+  <!-- required -->
+  <script src="/config.js"></script>
+  <!-- required -->
 
-        <script>
-            System.import("front/src/js/basic");
-        </script>
+  <script>
+    System.import("front/src/static/basic");
+  </script>
 
-        <h1>Hello World!</h1>
+  <h1>Hello World!</h1>
+  <div >
+    <div ng-controller='gayCtrl as gay'>
+      <h2>eagle happy hours</h2>
+      <ul ng-repeat='evnt in gay.happyHourEvents'>
+        <li>
+          {{evnt.age}}, {{evnt.cover}}, {{evnt.day}}, {{evnt.description}}, {{evnt.hours}}, {{evnt.name}}
+        </li>
+      </ul>
+    </div>
+  </div>
 
-        <div ng-controller='userCtrl as y'>
-        <h2>List of github users</h2>
-        <ul ng-repeat='usr in y.users'>
-            <li>
-                {{usr.id}}. {{usr.login}} <img src='{{usr.avatar_url}}' height='50px'/>
-            </li>
-        </ul>
 
-        </div>
-    </body>
+</body>
 
 </html>
