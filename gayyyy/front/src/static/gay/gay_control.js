@@ -7,10 +7,7 @@ class GayCtrl {
     }
 
     init(){
-        this.gaySvc.getHappyHourJson().then(happyHourEvents => {
-            this.happyHourEvents = happyHourEvents;
-            console.log(happyHourEvents);
-        });
+      this.events = this.gaySvc.getEvents();
     }
 }
 

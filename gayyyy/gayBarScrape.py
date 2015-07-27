@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
 from urllib import request
-import datetime
 import unicodedata
-import re
 import json
+import re
 
 
 
@@ -43,8 +42,6 @@ def get_saloon_daily_special():
 		eventOList.append(EventO("n/a", eventDescription, eventDay, eventHours, eventCover, eventAge))
 
 	return eventOList
-	#for eventO in eventOList:
-	#	print(eventO.printStuff(),"\n");
 
 def print_coded_thing(coverMaybe):
 	text = ''.join(coverMaybe.findAll(text=True))
@@ -61,28 +58,28 @@ def print_coded_thing(coverMaybe):
 # 	print("printing uncoded",only_ascii)
 # 	return only_ascii
 
-def get_day_number(dayAsString):
-	lowerCaseDayAsString = str(dayAsString).lower()
-	if 'monday' in lowerCaseDayAsString:
-		return 0
-	elif 'tuesday' in lowerCaseDayAsString:
-		return 1
-	elif 'wednesday' in lowerCaseDayAsString:
-		return 2
-	elif 'thursday' in lowerCaseDayAsString:
-		return 3
-	elif 'friday'in lowerCaseDayAsString:
-		return 4
-	elif 'saturday' in lowerCaseDayAsString:
-		return 5
-	elif 'sunday' in lowerCaseDayAsString:
-		return 6
+# def get_day_number(dayAsString):
+# 	lowerCaseDayAsString = str(dayAsString).lower()
+# 	if 'monday' in lowerCaseDayAsString:
+# 		return 0
+# 	elif 'tuesday' in lowerCaseDayAsString:
+# 		return 1
+# 	elif 'wednesday' in lowerCaseDayAsString:
+# 		return 2
+# 	elif 'thursday' in lowerCaseDayAsString:
+# 		return 3
+# 	elif 'friday'in lowerCaseDayAsString:
+# 		return 4
+# 	elif 'saturday' in lowerCaseDayAsString:
+# 		return 5
+# 	elif 'sunday' in lowerCaseDayAsString:
+# 		return 6
 
-def get_current_day(currentDay=None):
-	if currentDay == None:
-		dayNumber = datetime.datetime.today().weekday() #from datetime, get current day as int from monday = 0
-		print(dayNumber)
-		currentDay = DAY_MAPPING[dayNumber]
+# def get_current_day(currentDay=None):
+# 	if currentDay == None:
+# 		dayNumber = datetime.datetime.today().weekday() #from datetime, get current day as int from monday = 0
+# 		print(dayNumber)
+# 		currentDay = DAY_MAPPING[dayNumber]
 
 #def convert_to_whatever_code(SALOON_MAPPINGS):
 #	for key in SALOON_MAPPINGS:#== for key in dict.keys
@@ -132,8 +129,8 @@ def delete_content(pfile):
 	pfile.seek(0)
 	pfile.truncate()
 
-def log_it(stuffToBeWritten):
-	with open("front/src/json/happyHour.txt", "a") as log:
+def log_it(stuffToBeWritten, fileName):
+	with open(fileName, "a") as log:
 		delete_content(log)
 		log.write(stuffToBeWritten)
 		log.close()
@@ -144,18 +141,17 @@ def encode_eventO(obj):
 	return obj
 
 ##1. get eagle events
-#eagle_special_mappings = get_eagle_special_events()
-#if DEBUG_MODE:
-#print(eagle_special_mappings)
+eagle_special_mappings = get_eagle_special_events()
+eagle_special_string = json.dumps(eagle_special_mappings)
+log_it(eagle_special_string, "front/src/json/EagleSpecials.txt")
 
 #2. get eagle daily_specials
-#eagleDailyMappings = get_eagle_daily_specials()
-#print(eagleDailyMappings)
+eagle_daily_mappings = get_eagle_daily_specials()
+eagle_daily_string = json.dumps(eagle_daily_mappings)
+log_it(eagle_daily_string, "front/src/json/EagleHappyHour.txt")
 
-#3 Saloon stuff
+# 3 Saloon stuff
 SALOON_MAPPINGS = {}
 saloon_list = get_saloon_daily_special()#saloonList is now a list of events
 saloon_json_string = json.dumps(saloon_list, default=encode_eventO)#wow, that was way easier than i thought it would be
-print(saloon_json_string)
-
-log_it(saloon_json_string)
+log_it(saloon_json_string,"front/src/json/SaloonHappyHour.txt")
