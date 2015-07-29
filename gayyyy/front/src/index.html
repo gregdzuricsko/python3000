@@ -17,20 +17,26 @@
   <h1>Greg Dzuricsko is the best.</h1>
   <div>
     <div ng-controller='gayCtrl as gay'>
-      <h2>saloon happy hour</h2>
-      <ul ng-repeat='evnt in gay.events.saloonHappyHour'>
-        <li>
-           {{evnt.age}}, {{evnt.cover}}, {{evnt.description}}, {{evnt.hours}}, {{evnt.name}}
-        </li>
-      </ul>
       <h2>eagle happy hour</h2>
       <ul ng-repeat='(day,evnt) in gay.events.eagleHappyHour'>
         <li>
           {{day}}: {{evnt}}
         </li>
       </ul>
+      <h2>saloon happy hour</h2>
+      <ul ng-repeat='evnt in gay.events.saloonHappyHour'>
+        <li>
+           {{evnt.day}}: {{evnt.age}}, {{evnt.cover}}, {{evnt.description}}, {{evnt.hours}}, {{evnt.name}}
+        </li>
+      </ul>
       <h2>eagle special</h2>
       <ul ng-repeat='(day,evnt) in gay.events.eagleSpecials'>
+        <li>
+          {{day}}: {{evnt}}
+        </li>
+      </ul>
+      <h2>town house special</h2>
+      <ul ng-repeat='(day,evnt) in gay.events.townHouseSpecials'>
         <li>
           {{day}}: {{evnt}}
         </li>

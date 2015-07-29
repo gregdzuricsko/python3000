@@ -19,7 +19,10 @@ class GaySvc {
     this.getSaloonHappyHour().then(x =>{
       docs.saloonHappyHour = x;
       console.log("docs.saloonHappyHour = " + docs.saloonHappyHour);
-
+    });
+    this.getTownHouseSpecialEvents().then(x =>{
+      docs.townHouseSpecials = x;
+      console.log("docs.townHouseSpecials = " + docs.townHouseSpecials);
     });
     console.log(docs);
     return docs;
@@ -35,6 +38,10 @@ class GaySvc {
 
   getEagleSpecialEvents() {
     return this.$http.get('json/EagleSpecials.txt').then(r => r.data);
+  }
+
+  getTownHouseSpecialEvents() {
+      return this.$http.get('json/TownHouseSpecials.txt').then(r => r.data);
   }
 
 
