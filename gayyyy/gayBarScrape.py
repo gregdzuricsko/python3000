@@ -3,6 +3,7 @@ from urllib import request
 import unicodedata
 import json
 import re
+from collections import OrderedDict
 
 
 from EventO import EventO
@@ -96,7 +97,7 @@ def print_coded_thing(coverMaybe):
 
 
 def get_eagle_special_events():
-    eagleSpecialMappings = {}
+    eagleSpecialMappings = OrderedDict({})
     soup = get_soup(EAGLE_BOLT_SPECIAL_URL)
     allDays = soup.findAll("span", "style34")  # types in python!
     for day in allDays:
@@ -139,12 +140,11 @@ def get_town_house_specials():
     bsDays = leftColumn.findAll("h2")
     bsTitles = leftColumn.findAll("h3")
 
-    dayMapping = {}
+    dayMapping = OrderedDict({})
     bsDaysLength = len(bsDays)
     for i in range(bsDaysLength):
         dayMapping[bsDays[i].get_text()] = bsTitles[i].get_text()
 
-    print("town house specials are\ndayMapping")
     print("leaving town_house_specials")
     return dayMapping
 
