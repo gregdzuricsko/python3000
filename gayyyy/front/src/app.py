@@ -1,24 +1,22 @@
 from flask import Flask
-import json
-import pprint
+from flask import render_template
+from gayBarScrape import GayBarScrape
 
 
 app = Flask(__name__)
 app.debug = True
 
-happy_hour_json = 'json/happyHour.txt'
-
 @app.route('/hello')
 def hello():
+    gbs = GayBarScrape()
+    gbs.run()
     return "Hello World!"
 
 
 
-@app.route('/gay')
-def retrieve_json():
-    json_data = open(happy_hour_json).read()
-    data = json.loads(json_data)
-    return pprint.pprint(data).__str__
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run()

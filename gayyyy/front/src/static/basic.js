@@ -2,7 +2,6 @@
 import * as GayModule from './gay/gay_module';
 import angular from 'angular';
 
-console.log(angular.version);
-angular.module('gay',[])
-.factory('gaySvc', GayModule.svc)
-.controller('gayCtrl', GayModule.ctrl);
+angular.module('gay', [])
+    .factory('gaySvc', GayModule.svc)
+    .controller('gayCtrl', GayModule.ctrl);
