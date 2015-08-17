@@ -2,3 +2,5 @@ __pycache__/
 front/dist/
 node_modules/
 jspm_packages/
+fbkeys.py
+front/src/static/fbexampledontcommit

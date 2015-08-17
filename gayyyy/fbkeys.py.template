@@ -1,0 +1,10 @@
+APP_ID = #fbdev
+SECRET = #fbdev
+XFBML = True
+VERSION = 'v2.4'
+
+SHORT_TERM_TOKEN = '''
+#get by logging in as self and logging the resulting response from one's own app, client-side. I don't like how this is another step.
+
+AUTH_TOKEN = 
+#get by running getFullToken.py
