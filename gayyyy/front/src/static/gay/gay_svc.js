@@ -24,6 +24,12 @@ class GaySvc {
       docs.townHouseSpecials = x;
       console.log("docs.townHouseSpecials = " + docs.townHouseSpecials);
     });
+    this.getGroundZeroSpecialEvents().then(x =>{
+      docs.groundZeroSpecials = x;
+      console.log(JSON.stringify(x, null, 2));
+      console.log("docs.groundZeroSpecials = " + docs.groundZeroSpecials);
+    });
+
     console.log(docs);
     return docs;
   }
@@ -44,6 +50,9 @@ class GaySvc {
       return this.$http.get('json/TownHouseSpecials.txt').then(r => r.data);
   }
 
+  getGroundZeroSpecialEvents() {
+      return this.$http.get('json/GroundZeroSpecials.txt').then(r => r.data);
+  }
 
   static factory($http) {
     return new GaySvc($http);

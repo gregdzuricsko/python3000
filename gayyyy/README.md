@@ -4,6 +4,7 @@ Just some basic messing around with python and python tutorials and python chall
 must have ran
 pip install beautifulsoup4
 pip install html5lib
+pip install dateutil
 
 run using python 3 on gayBarScrape.py
 

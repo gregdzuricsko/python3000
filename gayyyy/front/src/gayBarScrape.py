@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 
 from EventO import EventO
+import fbstuff
 
 
 class GayBarScrape:
@@ -170,6 +171,7 @@ class GayBarScrape:
 
     def run(self):
         # 1. get eagle events
+        print("1")
         eagle_special_mappings = self.get_eagle_special_events()
         eagle_special_string = json.dumps(eagle_special_mappings)
         self.log_it(eagle_special_string, "json/EagleSpecials.txt")
@@ -191,3 +193,11 @@ class GayBarScrape:
         town_house_specials = self.get_town_house_specials()
         town_house_string = json.dumps(town_house_specials)
         self.log_it(town_house_string, "json/TownHouseSpecials.txt")
+
+        #5 ground zero
+        ground_zero_specials = fbstuff.get_ground_zero_events()
+        ground_zero_string = json.dumps(ground_zero_specials)
+        self.log_it(ground_zero_string, "json/GroundZeroSpecials.txt")
+
+gbs = GayBarScrape()
+gbs.run()

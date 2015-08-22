@@ -1,6 +1,8 @@
 <html>
 
-<head></head>
+<head>
+<link rel="stylesheet" type="text/css" href="basic.css">
+</head>
 
 <body ng-app="gay">
   <script src='/jspm_packages/es6-module-loader.js'></script>
@@ -42,8 +44,10 @@
         </li>
       </ul>
       <h2>ground zero special</h2>
-      <div id="gzspec">
-          
+      <div id="gzspec" ng-repeat='(day,evnt) in gay.events.groundZeroSpecials'>
+          <li>
+          {{day}}: {{evnt}}
+          </li>
       </div>
     </div>
   </div>
