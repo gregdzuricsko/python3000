@@ -5,6 +5,7 @@ import json
 import re
 from collections import OrderedDict
 
+from selenium import webdriver
 
 from EventO import EventO
 import fbstuff
@@ -38,7 +39,7 @@ class GayBarScrape:
             eventTitle = cover.find("h4", "day")
             eventDescription = cover.find("div", "event-description")
             eventDay = self.print_coded_thing(eventTitle).decode('utf-8')
-            #eventDayNumber = get_day_number(eventDay)
+            # eventDayNumber = get_day_number(eventDay)
             eventDescription = self.print_coded_thing(
                 eventDescription).decode('utf-8')
 
@@ -101,14 +102,24 @@ class GayBarScrape:
 
     def get_eagle_special_events(self):
         eagleSpecialMappings = OrderedDict({})
-        soup = self.get_soup(self.EAGLE_BOLT_SPECIAL_URL)
-        allDays = soup.findAll("span", "style34")  # types in python!
+
+        # eagle dynamically generates date names... ya punkks
+        browser = webdriver.Firefox()
+        browser.get(self.EAGLE_BOLT_SPECIAL_URL)
+        soup = BeautifulSoup(browser.page_source)
+        # print(soup.get_text().encode("utf-8"))
+        browser.close()
+
+        allDays = soup.findAll(
+            "span", {'class': 'style34'})  # types in python!
         for day in allDays:
+            # print(day)
             if day.text is '':
                 continue
             eventDescription = day.find_next("blockquote")
             eagleSpecialMappings[day.text] = re.sub(
                 r'\s+', ' ', self.print_coded_thing(eventDescription).decode('utf-8'))
+        # print(pprint.pprint(list(eagleSpecialMappings)))
         return eagleSpecialMappings
 
     def get_eagle_daily_specials(self):
@@ -176,7 +187,7 @@ class GayBarScrape:
         eagle_special_string = json.dumps(eagle_special_mappings)
         self.log_it(eagle_special_string, "json/EagleSpecials.txt")
 
-        # 2. get eagle daily_specials
+        # 2. get eagle daily_special
         eagle_daily_mappings = self.get_eagle_daily_specials()
         eagle_daily_string = json.dumps(eagle_daily_mappings)
         self.log_it(eagle_daily_string, "json/EagleHappyHour.txt")
@@ -194,7 +205,7 @@ class GayBarScrape:
         town_house_string = json.dumps(town_house_specials)
         self.log_it(town_house_string, "json/TownHouseSpecials.txt")
 
-        #5 ground zero
+        # 5 ground zero
         ground_zero_specials = fbstuff.get_ground_zero_events()
         ground_zero_string = json.dumps(ground_zero_specials)
         self.log_it(ground_zero_string, "json/GroundZeroSpecials.txt")

@@ -5,6 +5,8 @@ must have ran
 pip install beautifulsoup4
 pip install html5lib
 pip install dateutil
+pip install selenium
+#selenium is used because some sites like eagle bolt render dates on the client side
 
 run using python 3 on gayBarScrape.py
 
