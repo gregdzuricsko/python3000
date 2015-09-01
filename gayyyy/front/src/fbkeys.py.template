@@ -4,7 +4,7 @@ XFBML = True
 VERSION = 'v2.4'
 
 SHORT_TERM_TOKEN = '''
-#get by logging in as self and logging the resulting response from one's own app, client-side. I don't like how this is another step.
+#get by logging in as self and logging the resulting response from one's own app, client-side. I don't like how this is another step. Do this by copy pasting the async loging stuff, and ensuring that facebook thinks you're doing this...
 
-AUTH_TOKEN = 
+AUTH_TOKEN =
 #get by running getFullToken.py

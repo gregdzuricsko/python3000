@@ -1,56 +1,64 @@
 <html>
 
 <head>
-<link rel="stylesheet" type="text/css" href="basic.css">
+    <link rel="stylesheet" type="text/css" href="basic.css">
+    <script src='/jspm_packages/es6-module-loader.js'></script>
+    <!-- optional: to load ES6-style modules -->
+    <script src='/jspm_packages/system.js'></script>
+    <!-- required -->
+    <script src="/config.js"></script>
+    <!-- required -->
+
 </head>
 
 <body ng-app="gay">
-  <script src='/jspm_packages/es6-module-loader.js'></script>
-  <!-- optional: to load ES6-style modules -->
-  <script src='/jspm_packages/system.js'></script>
-  <!-- required -->
-  <script src="/config.js"></script>
-  <!-- required -->
 
-  <script>
-    System.import("front/src/static/basic");
-  </script>
+    <script>
+        System.import("front/src/static/basic");
+    </script>
 
-  <h1>Greg Dzuricsko is the best.</h1>
-  <div>
-    <div ng-controller='gayCtrl as gay'>
-      <h2>eagle happy hour</h2>
-      <ul ng-repeat='(day,evnt) in gay.events.eagleHappyHour'>
-        <li>
-          {{day}}: {{evnt}}
-        </li>
-      </ul>
-      <h2>saloon happy hour</h2>
-      <ul ng-repeat='evnt in gay.events.saloonHappyHour'>
-        <li>
-           {{evnt.day}}: {{evnt.age}}, {{evnt.cover}}, {{evnt.description}}, {{evnt.hours}}, {{evnt.name}}
-        </li>
-      </ul>
-      <h2>eagle special</h2>
-      <ul ng-repeat='(day,evnt) in gay.events.eagleSpecials'>
-        <li>
-          {{day}}: {{evnt}}
-        </li>
-      </ul>
-      <h2>town house special</h2>
-      <ul ng-repeat='(day,evnt) in gay.events.townHouseSpecials'>
-        <li>
-          {{day}}: {{evnt}}
-        </li>
-      </ul>
-      <h2>ground zero special</h2>
-      <div id="gzspec" ng-repeat='(day,evnt) in gay.events.groundZeroSpecials'>
-          <li>
-          {{day}}: {{evnt}}
-          </li>
-      </div>
+    <h1>Greg Dzuricsko is the best.</h1>
+    <div>
+        <div ng-controller='gayCtrl as gay'>
+            <div class="ng-cloak">
+                <h2>eagle happy hour</h2>
+                <ul ng-repeat='(day,evnt) in gay.events.eagleHappyHour'>
+                    <li>
+                        {{day}}: {{evnt}}
+                    </li>
+                </ul>
+                <h2>saloon happy hour</h2>
+                <ul ng-repeat='evnt in gay.events.saloonHappyHour'>
+                    <li>
+                        {{evnt.day}}: {{evnt.age}}, {{evnt.cover}}, {{evnt.description}}, {{evnt.hours}}, {{evnt.name}}
+                    </li>
+                </ul>
+                <h2>eagle special</h2>
+                <ul ng-repeat='(day,evnt) in gay.events.eagleSpecials'>
+                    <li>
+                        {{day}}: {{evnt}}
+                    </li>
+                </ul>
+                <h2>town house special</h2>
+                <ul ng-repeat='(day,evnt) in gay.events.townHouseSpecials'>
+                    <li>
+                        {{day}}: {{evnt}}
+                    </li>
+                </ul>
+                <h2>ground zero special</h2>
+                <div id="gzspec" ng-repeat='(day,evnt) in gay.events.groundZeroSpecials'>
+                    <li>
+                        {{day}}: {{evnt.name}}
+                        <ul>
+                            <li>
+                                {{evnt.description}}
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
 
 </body>

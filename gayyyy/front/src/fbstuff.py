@@ -22,6 +22,7 @@ def get_shared_event_jsons(pageID):
     r = requests.get(URL_BASE + pageID + "/" + "feed" + "?" + accessTokenSuffix)
 
     json = r.json()
+    print(URL_BASE + pageID + "/" + "feed" + "?" + accessTokenSuffix)
     data = json['data']
     print(r)
 
