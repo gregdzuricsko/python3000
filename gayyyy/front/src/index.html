@@ -21,43 +21,70 @@
     <div>
         <div ng-controller='gayCtrl as gay'>
             <div class="ng-cloak">
-                <h2>eagle happy hour</h2>
-                <ul ng-repeat='(day,evnt) in gay.events.eagleHappyHour'>
-                    <li>
-                        {{day}}: {{evnt}}
-                    </li>
-                </ul>
-                <h2>saloon happy hour</h2>
-                <ul ng-repeat='evnt in gay.events.saloonHappyHour'>
-                    <li>
-                        {{evnt.day}}: {{evnt.age}}, {{evnt.cover}}, {{evnt.description}}, {{evnt.hours}}, {{evnt.name}}
-                    </li>
-                </ul>
-                <h2>eagle special</h2>
-                <ul ng-repeat='(day,evnt) in gay.events.eagleSpecials'>
-                    <li>
-                        {{day}}: {{evnt}}
-                    </li>
-                </ul>
-                <h2>town house special</h2>
-                <ul ng-repeat='(day,evnt) in gay.events.townHouseSpecials'>
-                    <li>
-                        {{day}}: {{evnt}}
-                    </li>
-                </ul>
-                <h2>ground zero special</h2>
-                <div id="gzspec" ng-repeat='(day,evnt) in gay.events.groundZeroSpecials'>
-                    <li>
-                        {{day}}: {{evnt.name}}
-                        <ul>
+                <div class="happyList">
+                    <div class="events">
+                        <h2 class="title">eagle happy hour</h2>
+                        <ul ng-repeat='(day,evnt) in gay.events.eagleHappyHour'>
                             <li>
-                                {{evnt.description}}
+                                {{day}}: {{evnt}}
                             </li>
                         </ul>
-                    </li>
+                    </div>
+                    <div class="events">
+                        <h2 class="title">saloon happy hour</h2>
+                        <div class="eventList">
+                            <ul ng-repeat='evnt in gay.events.saloonHappyHour'>
+                                <li>
+                                    {{evnt.day}}: {{evnt.age}}, {{evnt.cover}}, {{evnt.description}}, {{evnt.hours}}, {{evnt.name}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+                <div class="specialList">
+                    <div class="events">
+                        <h2 class="title">eagle special</h2>
+                        <div class="eventList">
+
+                            <ul ng-repeat='(day,evnt) in gay.events.eagleSpecials'>
+                                <li>
+                                    {{day}}: {{evnt}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="events">
+                        <h2 class="title">town house special</h2>
+                        <div class="eventList">
+
+                            <ul ng-repeat='(day,evnt) in gay.events.townHouseSpecials'>
+                                <li>
+                                    {{day}}: {{evnt}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="events">
+                        <h2 class="title">ground zero special</h2>
+                        <div class="eventList">
+                            <div id="gzspec" ng-repeat='(day,evnt) in gay.events.groundZeroSpecials'>
+                                <li>
+                                    {{day}}: {{evnt.name}}
+                                    <ul>
+                                        <li>
+                                            {{evnt.description}}
+                                        </li>
+                                    </ul>
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
+    </div>
     </div>
 
 

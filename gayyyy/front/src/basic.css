@@ -1,6 +1,44 @@
-body{
+body {
     background-color: #d0e4fe;
 }
+div.events{
+    position: relative;
+display: block;
+padding: .1em .1em .1em .5em;
+text-decoration: none;
+border-radius: .1em;
+}
+div.events:after {
+    content:'';
+    display:block;
+    position:relative;
+    top: 100px;
+left: 10px;
+right: 10px;
+bottom: 10px;
+background-color:blue;
+}
+div.events:nth-of-type(even) {
+    background: #803E15
+}
+div.events:nth-of-type(odd) {
+    background: #FFCBAA
+}
+.title {
+    background:#D4936A
+}
+
+ul{
+    list-style-type:none;
+    position: relative;
+display: block;
+padding: .4em .4em .4em 2em;
+*padding: .4em;
+background: #D4936A;
+text-decoration: none;
+border-radius: .3em;
+}
+
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+    display: none !important;
 }
