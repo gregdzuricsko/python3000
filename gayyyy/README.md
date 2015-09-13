@@ -8,6 +8,8 @@ pip install dateutil
 pip install selenium
 #selenium is used because some sites like eagle bolt render dates on the client side
 
+pip install boto
+
 run using python 3 on gayBarScrape.py
 
 front end is in folder front:
